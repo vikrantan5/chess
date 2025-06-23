@@ -1,0 +1,157 @@
+node.js ------server
+express.js ----client
+socketio ------real time connection
+chess.js --------chess 
+
+
+initiallization-----
+                   |
+                   initial board rendering------
+                                               |
+                                               drag and drop functionality--------
+                                                                                 |
+                                                                                 socket event handling
+                                                                                          /\
+                                                                                         /  \
+                                                                                    client  server
+
+
+
+
+initialixation:--
+socket and chess objects are iniializaed
+board element is selected from the DOM
+initial values for draggedPiece , sourceSquare , playerRole are set to null
+
+
+
+initial board reddering-----
+
+renderBoard() is called to display the initial sate of the chessboard.
+
+
+
+
+Drag and Drop functionality----------
+
+renderBoard() setsup drag and drop event ;isteners for each piece and squaare
+
+pieces are draggable based on the players playerRole
+when a piece is dragged , draggedPiece and sourceSquare set
+
+when a piece is dropped  , handleMove() is called to handle the move logic and emit it to the server
+
+
+
+
+
+Variables Client Side
+
+socket -----connection to the server using socketio
+chess ----an instance of the chess class
+
+board Element   -----the piece being dragged during A drag and drop Action
+
+sourceSquare  ------- Stores the Starting square of the Dregged piece
+player Role   -------holds the role of the player (E.G , "W" for while "B" for black  , or Null for A spectator)
+
+
+
+
+Functions Client Side                                  Socket Client Side
+
+
+renderBoard                                             SocketON("player role")
+handleMove                                               SocketON("spectator role")
+GetPieceUnicode                                           SocketON("boardState")
+                                                              SocketON("move")
+
+
+
+ # SERVER JS CODE
+
+- Import: express, http, socket.io, chess.js
+
+- Create Express app instance
+- Initialize HTTP server with Express
+- Instantiate Socket.io on HTTP server
+
+- Create Chess object instance (chess.js)
+
+- Initialize:
+    - Players object: track socket IDs, roles (white/black)
+    - CurrentPlayer: track current turn
+
+- Configure Express app:
+    - Use EJS templating engine
+    - Serve static files from 'public' directory
+
+- Define route for root URL
+- Render EJS template "index"
+- Title: "Custom Chess Game"
+
+- Socket.io handles connection event
+- Callback executed on client connect
+- Server assigns role based on availability:
+    - If slots empty:
+        - Assign role (white/black)
+        - Inform player
+    - If slots full:
+        - Designate as spectator
+
+- Client connection:
+    - Assign role based on game state:
+        - If no white player, assign white role
+        - If no black player, assign black role
+        - Emit "playerRole" event with assigned role
+        - If both slots filled, designate as spectator
+        - Emit "spectatorRole" event
+    - Send initial board state using FEN notation
+
+- Client disconnection:
+    - Remove assigned role from players object
+
+- Listen for "move" events:
+    - Validate correct player's turn
+    - If valid:
+        - Update game state
+        - Broadcast move via "move" event
+        - Send updated board state via "boardState" event
+    - If invalid:
+        - Log error message
+
+- Ensure smooth gameplay and real-time updates for all connected clients.
+
+
+
+
+
+
+
+
+
+
+
+
+
+so
+
+
+
+
+
+
+player = {}  initially player me kuch mhi handling
+pahla banda aate hi use black mil jaayega
+
+bahla banda aaya to
+player  ={
+    white: sfbfhhdfdfjwfhwbfkf
+    black: weehjbfwbfjwkfekjfn
+
+}
+
+
+
+agar koi  v piece move ho rha hai to cheeck karo valid move
+
